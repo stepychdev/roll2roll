@@ -100,3 +100,5 @@ coverage/
 # Session notes
 SESSION_REPORT.md
 LAST_SESSION.md
+.vercel
+.env*.local
