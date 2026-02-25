@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-slate-900 dark:bg-[#0f1219] dark:text-slate-100 font-sans antialiased overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .bento-card {
+    background-color: white;
+    border-radius: 2rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  :is(.dark .bento-card) {
+    background-color: #1e293b;
+  }
+  .bento-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -4px rgba(13, 89, 242, 0.12);
+  }
+  :is(.dark .bento-card:hover) {
+    box-shadow: 0 10px 30px -4px rgba(13, 89, 242, 0.2);
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes pulse-gold {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); border-color: rgba(245, 158, 11, 1); }
+  70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); border-color: rgba(245, 158, 11, 0.6); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); border-color: rgba(245, 158, 11, 1); }
+}
+.animate-pulse-gold {
+  animation: pulse-gold 2s infinite;
+}
