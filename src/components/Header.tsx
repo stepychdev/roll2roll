@@ -62,9 +62,7 @@ export function Header() {
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => navigate('game')}
         >
-          <div className="flex items-center justify-center size-10 rounded-full bg-primary/10 text-primary">
-            <span className="text-xl font-black">R2R</span>
-          </div>
+          <img src="/metadata/icons/ico.svg" alt="Roll2Roll" className="size-10 rounded-full" />
           <h2 className="text-slate-900 dark:text-white text-xl font-bold tracking-tight">Roll2Roll</h2>
         </div>
 
