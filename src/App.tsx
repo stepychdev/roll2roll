@@ -17,14 +17,20 @@ import { PlayerProfile } from './pages/PlayerProfile';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 
-// In production mainnet, always route through the serverless proxy
-// so the RPC API key stays server-side and is never exposed to visitors.
-// For local dev, use VITE_RPC_URL if set, otherwise fall back to public endpoint.
+// Cloudflare Worker proxy (preferred — supports both HTTP and WebSocket).
+// Falls back to Vercel serverless proxy (HTTP only) in production mainnet,
+// or VITE_RPC_URL / public endpoint for local dev.
+const CF_PROXY = (import.meta.env.VITE_RPC_PROXY_URL as string | undefined)?.trim();
+
 const RPC_ENDPOINT =
-  import.meta.env.PROD && SOLANA_NETWORK === 'mainnet' && typeof window !== 'undefined'
+  CF_PROXY ||
+  (import.meta.env.PROD && SOLANA_NETWORK === 'mainnet' && typeof window !== 'undefined'
     ? `${window.location.origin}/api/solana-rpc`
     : ((import.meta.env.VITE_RPC_URL as string | undefined)?.trim() ||
-       clusterApiUrl(SOLANA_NETWORK === 'mainnet' ? 'mainnet-beta' : 'devnet'));
+       clusterApiUrl(SOLANA_NETWORK === 'mainnet' ? 'mainnet-beta' : 'devnet')));
+
+// Derive WS endpoint from RPC URL (https→wss, http→ws)
+const WS_ENDPOINT = RPC_ENDPOINT.replace(/^http/, 'ws');
 
 function PageRouter() {
   const { page } = useNavigation();
@@ -46,7 +52,7 @@ function App() {
   ], []);
 
   return (
-    <ConnectionProvider endpoint={RPC_ENDPOINT}>
+    <ConnectionProvider endpoint={RPC_ENDPOINT} config={{ wsEndpoint: WS_ENDPOINT, commitment: 'confirmed' }}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
           <ThemeProvider>

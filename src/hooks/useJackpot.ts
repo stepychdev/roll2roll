@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { AnchorProvider, Program } from "@coral-xyz/anchor";
-import { Keypair, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
+import { Keypair, PublicKey, Transaction, TransactionInstruction, type AccountInfo } from "@solana/web3.js";
 import {
   AccountLayout,
   createAssociatedTokenAccountIdempotentInstruction,
@@ -38,6 +38,7 @@ import {
   getRoundPda,
   getParticipantPda,
   parseParticipant,
+  parseRound,
   buildDepositAny,
   buildClaim,
   buildCancelRound,
@@ -48,6 +49,7 @@ import { saveRoundToFirebase, getMaxArchivedRoundId } from "../lib/roundArchive"
 import { toHistoryRoundWithDeposits } from "./useRoundHistory";
 import type { Participant, GamePhase } from "../types";
 import { PARTICIPANT_COLORS } from "../mocks";
+import { useAccountSubscription } from "./useAccountSubscription";
 
 const POLL_FAST = 3000;   // active game: open / countdown / spinning
 const POLL_SLOW = 10000;  // idle: waiting / settled / claimed / cancelled
@@ -371,6 +373,94 @@ export function useJackpot(): JackpotState {
     }
   }, [connection]);
 
+  // ─── Process round data (shared by HTTP poll and WS callback) ─
+  const processRoundData = useCallback(async (data: RoundData) => {
+    // Guard: discard stale results if roundId has already advanced
+    if (Number(data.roundId) !== roundId) return;
+    setRoundData(data);
+
+    const now = Math.floor(Date.now() / 1000);
+    setPhase(phaseFromStatus(data.status, data.endTs, now));
+
+    const end = Number(data.endTs);
+    setTimeLeft(end > 0 ? Math.max(0, end - now) : 0);
+
+    // Build participants list (batch fetch — single RPC call)
+    const parts: Participant[] = [];
+    const roundPda = getRoundPda(roundId);
+    const count = data.participantsCount;
+
+    // Reset deposit tokens cache when round changes
+    if (depositTokensCacheRef.current.roundId !== roundId) {
+      depositTokensCacheRef.current = {
+        roundId, map: new Map(), processedSigs: new Set(), resolving: false,
+      };
+    }
+
+    // Fetch USDC icon once (not per-participant)
+    let usdcIcon = "";
+    try {
+      const usdcMeta = await fetchTokenMetadata(connection, USDC_MINT);
+      if (usdcMeta?.image) usdcIcon = usdcMeta.image;
+    } catch { }
+
+    if (count > 0) {
+      // Derive all participant PDAs at once
+      const pdas = data.participants.slice(0, count).map(addr =>
+        getParticipantPda(roundPda, addr)
+      );
+
+      // Single batch RPC call instead of N individual fetches
+      const infos = await connection.getMultipleAccountsInfo(pdas);
+
+      for (let i = 0; i < count; i++) {
+        const addr = data.participants[i];
+        const addrStr = addr.toBase58();
+        let tickets = 0;
+        let usdcAmt = 0;
+
+        const info = infos[i];
+        if (info?.data) {
+          try {
+            const pData = parseParticipant(info.data as Buffer);
+            tickets = Number(pData.ticketsTotal);
+            usdcAmt = Number(pData.usdcTotal) / 10 ** USDC_DECIMALS;
+          } catch {
+            usdcAmt = Number(data.totalUsdc) / 10 ** USDC_DECIMALS / count;
+            tickets = Math.floor(usdcAmt * 1_000_000 / TICKET_UNIT);
+          }
+        } else {
+          // Participant PDA closed or not found — equal split fallback
+          usdcAmt = Number(data.totalUsdc) / 10 ** USDC_DECIMALS / count;
+          tickets = Math.floor(usdcAmt * 1_000_000 / TICKET_UNIT);
+        }
+
+        // Use cached deposit tokens if available, fallback to USDC
+        const cachedTokens = depositTokensCacheRef.current.map.get(addrStr);
+        const displayTokens = cachedTokens && cachedTokens.length > 0
+          ? cachedTokens.map(t => ({ symbol: t.symbol, amount: usdcAmt, icon: t.icon }))
+          : [{ symbol: "USDC", amount: usdcAmt, icon: usdcIcon }];
+
+        parts.push({
+          address: addrStr,
+          displayName:
+            publicKey && addr.equals(publicKey)
+              ? "You"
+              : `${addrStr.slice(0, 4)}...${addrStr.slice(-4)}`,
+          color: PARTICIPANT_COLORS[i % PARTICIPANT_COLORS.length],
+          usdcAmount: usdcAmt,
+          tickets,
+          tokens: displayTokens,
+        });
+      }
+
+      // Fire-and-forget: resolve deposit tokens for unresolved participants
+      // Results will be picked up on the next poll/WS cycle
+      resolveDepositTokens(roundPda, parts.map(p => p.address));
+    }
+    setParticipants(parts);
+  }, [connection, roundId, publicKey, resolveDepositTokens]);
+
   // ─── Poll round data ──────────────────────────────
   const pollRound = useCallback(async () => {
     try {
@@ -381,94 +471,11 @@ export function useJackpot(): JackpotState {
         setParticipants([]);
         return;
       }
-      // Guard: discard stale poll results if roundId has already advanced
-      if (Number(data.roundId) !== roundId) return;
-      setRoundData(data);
-
-      const now = Math.floor(Date.now() / 1000);
-      setPhase(phaseFromStatus(data.status, data.endTs, now));
-
-      const end = Number(data.endTs);
-      setTimeLeft(end > 0 ? Math.max(0, end - now) : 0);
-
-      // Build participants list (batch fetch — single RPC call)
-      const parts: Participant[] = [];
-      const roundPda = getRoundPda(roundId);
-      const count = data.participantsCount;
-
-      // Reset deposit tokens cache when round changes
-      if (depositTokensCacheRef.current.roundId !== roundId) {
-        depositTokensCacheRef.current = {
-          roundId, map: new Map(), processedSigs: new Set(), resolving: false,
-        };
-      }
-
-      // Fetch USDC icon once (not per-participant)
-      let usdcIcon = "";
-      try {
-        const usdcMeta = await fetchTokenMetadata(connection, USDC_MINT);
-        if (usdcMeta?.image) usdcIcon = usdcMeta.image;
-      } catch { }
-
-      if (count > 0) {
-        // Derive all participant PDAs at once
-        const pdas = data.participants.slice(0, count).map(addr =>
-          getParticipantPda(roundPda, addr)
-        );
-
-        // Single batch RPC call instead of N individual fetches
-        const infos = await connection.getMultipleAccountsInfo(pdas);
-
-        for (let i = 0; i < count; i++) {
-          const addr = data.participants[i];
-          const addrStr = addr.toBase58();
-          let tickets = 0;
-          let usdcAmt = 0;
-
-          const info = infos[i];
-          if (info?.data) {
-            try {
-              const pData = parseParticipant(info.data as Buffer);
-              tickets = Number(pData.ticketsTotal);
-              usdcAmt = Number(pData.usdcTotal) / 10 ** USDC_DECIMALS;
-            } catch {
-              usdcAmt = Number(data.totalUsdc) / 10 ** USDC_DECIMALS / count;
-              tickets = Math.floor(usdcAmt * 1_000_000 / TICKET_UNIT);
-            }
-          } else {
-            // Participant PDA closed or not found — equal split fallback
-            usdcAmt = Number(data.totalUsdc) / 10 ** USDC_DECIMALS / count;
-            tickets = Math.floor(usdcAmt * 1_000_000 / TICKET_UNIT);
-          }
-
-          // Use cached deposit tokens if available, fallback to USDC
-          const cachedTokens = depositTokensCacheRef.current.map.get(addrStr);
-          const displayTokens = cachedTokens && cachedTokens.length > 0
-            ? cachedTokens.map(t => ({ symbol: t.symbol, amount: usdcAmt, icon: t.icon }))
-            : [{ symbol: "USDC", amount: usdcAmt, icon: usdcIcon }];
-
-          parts.push({
-            address: addrStr,
-            displayName:
-              publicKey && addr.equals(publicKey)
-                ? "You"
-                : `${addrStr.slice(0, 4)}...${addrStr.slice(-4)}`,
-            color: PARTICIPANT_COLORS[i % PARTICIPANT_COLORS.length],
-            usdcAmount: usdcAmt,
-            tickets,
-            tokens: displayTokens,
-          });
-        }
-
-        // Fire-and-forget: resolve deposit tokens for unresolved participants
-        // Results will be picked up on the next poll cycle
-        resolveDepositTokens(roundPda, parts.map(p => p.address));
-      }
-      setParticipants(parts);
+      await processRoundData(data);
     } catch (e: any) {
       console.error("Poll error:", e);
     }
-  }, [connection, roundId, program, publicKey, resolveDepositTokens]);
+  }, [connection, roundId, processRoundData]);
 
   // ─── Poll USDC balance (lightweight — single ATA query) ─
   const pollBalance = useCallback(async () => {
@@ -486,8 +493,65 @@ export function useJackpot(): JackpotState {
     }
   }, [connection, publicKey]);
 
+  // ─── WebSocket subscription: round PDA ─────────────
+  const roundPda = useMemo(
+    () => (initialized ? getRoundPda(roundId) : null),
+    [roundId, initialized],
+  );
+  const lastWsRef = useRef(0);
+
+  const handleRoundWs = useCallback(
+    (info: AccountInfo<Buffer>) => {
+      lastWsRef.current = Date.now();
+      try {
+        const data = parseRound(info.data as Buffer);
+        processRoundData(data);
+      } catch (e) {
+        console.warn("WS round parse error:", e);
+      }
+    },
+    [processRoundData],
+  );
+
+  const { wsConnected } = useAccountSubscription({
+    account: roundPda,
+    onData: handleRoundWs,
+  });
+
+  // ─── WebSocket subscription: USDC balance ─────────
+  const userAta = useMemo(() => {
+    if (!publicKey) return null;
+    // getAssociatedTokenAddress is async, but the derivation is deterministic —
+    // use sync PDA derivation for the subscription key.
+    const [ata] = PublicKey.findProgramAddressSync(
+      [publicKey.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), USDC_MINT.toBuffer()],
+      new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"), // Associated Token Program
+    );
+    return ata;
+  }, [publicKey]);
+
+  const handleBalanceWs = useCallback(
+    (info: AccountInfo<Buffer>) => {
+      try {
+        const decoded = AccountLayout.decode(info.data);
+        setMyUsdcBalance(Number(decoded.amount) / 10 ** USDC_DECIMALS);
+      } catch {
+        // Ignore decode errors — next poll will correct
+      }
+    },
+    [],
+  );
+
+  useAccountSubscription({
+    account: userAta,
+    onData: handleBalanceWs,
+  });
+
   // Adaptive polling: fast during active gameplay, slow in idle states.
+  // When WS is active and fresh (<15s), use slower fallback polling (30s).
   // Pauses when browser tab is hidden. Balance polled only on initial load.
+  const POLL_WS_FALLBACK = 30000;
+  const WS_FRESH_THRESHOLD = 15000;
   const phaseRef = useRef(phase);
   useEffect(() => { phaseRef.current = phase; }, [phase]);
 
@@ -503,10 +567,15 @@ export function useJackpot(): JackpotState {
       if (stopped) return;
       const p = phaseRef.current;
       const fast = p === 'open' || p === 'countdown' || p === 'spinning';
+
+      // When WS is active and fresh, use slower fallback polling
+      const wsFresh = wsConnected && (Date.now() - lastWsRef.current) < WS_FRESH_THRESHOLD;
+      const interval = wsFresh ? POLL_WS_FALLBACK : (fast ? POLL_FAST : POLL_SLOW);
+
       timer = setTimeout(async () => {
         await pollRound();
         schedule();
-      }, fast ? POLL_FAST : POLL_SLOW);
+      }, interval);
     };
 
     schedule();
@@ -528,7 +597,7 @@ export function useJackpot(): JackpotState {
       clearTimeout(timer);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [pollRound, pollBalance, initialized]);
+  }, [pollRound, pollBalance, initialized, wsConnected]);
 
   // Countdown timer
   useEffect(() => {
