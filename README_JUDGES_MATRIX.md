@@ -1,12 +1,12 @@
 # README for Matrix Hackathon Judges
 
 ## Project Summary
-**Jackpot SocialFi Roulette** is a fair, open, on-chain SocialFi jackpot game on Solana that combines:
+**Roll2Roll SocialFi Roulette** is a fair, open, on-chain SocialFi roulette game on Solana that combines:
 - provably fair randomness (VRF)
 - Jupiter-powered token swaps for deposits and degen claims
 - social gameplay loops (live feed, wheel, chat, history)
 
-Users can join a shared jackpot round with USDC or other tokens (swapped to USDC), watch their probability update in real time, and claim winnings in classic USDC mode or a degen claim flow.
+Users can join a shared roulette round with USDC or other tokens (swapped to USDC), watch their probability update in real time, and claim winnings in classic USDC mode or a degen claim flow.
 
 ## Why This Is Interesting
 - **On-chain game logic** with transparent and open state
@@ -136,7 +136,7 @@ But:
 - Some transparency/partner tooling (dashboard pages) is roadmap UX, not current core gameplay functionality
 
 ## Monetization Flexibility (Core Product Advantage)
-We intentionally designed the game format to support many monetization models without changing the core fair/on-chain jackpot logic:
+We intentionally designed the game format to support many monetization models without changing the core fair/on-chain roulette logic:
 - public rounds
 - degen claim fee modes
 - sponsored/private rooms
@@ -160,7 +160,7 @@ This gives the product a large surface area for experimentation while preserving
 5. Try `Degen Mode` claim (VRF-seeded lite version)
 
 ## Architecture at a Glance
-- **On-chain**: Anchor jackpot program (round state, deposits, settlement, claims/refunds)
+- **On-chain**: Anchor roulette program (round state, deposits, settlement, claims/refunds)
 - **Randomness**: VRF-backed winner selection
 - **DeFi routing**: Jupiter APIs + swap instructions
 - **Automation**: Crank service

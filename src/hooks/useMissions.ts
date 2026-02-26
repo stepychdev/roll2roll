@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-const MISSIONS_KEY = 'jackpot_missions';
+const MISSIONS_KEY = 'roll2roll_missions';
 
 export interface Mission {
   id: string;

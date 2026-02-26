@@ -1,7 +1,7 @@
 <p align="center">
-  <h1 align="center">Jackpot</h1>
+  <h1 align="center">Roll2Roll</h1>
   <p align="center">
-    <strong>Provably fair on-chain social jackpot on Solana</strong>
+    <strong>Provably fair on-chain social roulette on Solana</strong>
   </p>
   <p align="center">
     Deposit any token &nbsp;·&nbsp; One winner takes the pot &nbsp;·&nbsp; Verified by math, not trust

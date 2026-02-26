@@ -1,7 +1,7 @@
 # FAQ для жюри (RU, устное интервью)
 
 ## 1) В чем главная идея продукта?
-Это **fair / open / on-chain SocialFi jackpot** на Solana.  
+Это **fair / open / on-chain SocialFi roulette** на Solana.  
 Мы превращаем DeFi-действия (через Jupiter) в игровой цикл: вход в раунд, live pot, social/FOMO, VRF-розыгрыш, claim, degen mode.
 
 ## 2) Чем вы отличаетесь от “обычного swap UI”?
@@ -116,5 +116,5 @@ Pinocchio у нас в roadmap для **hot paths**:
 Но MagicBlock — хороший roadmap fit для будущих real-time механик.
 
 ## 14) Короткая формула для ответа жюри
-Мы строим **fair + onchain + open SocialFi jackpot** с degen/FOMO UX, где Jupiter — часть core gameplay loop, а не отдельная DeFi-кнопка.
+Мы строим **fair + onchain + open SocialFi roulette** с degen/FOMO UX, где Jupiter — часть core gameplay loop, а не отдельная DeFi-кнопка.
 

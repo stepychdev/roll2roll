@@ -3,7 +3,7 @@
 ## Вариант 1 — Спокойный product demo pitch (~2:00)
 
 **0:00 - 0:15**  
-Привет. Это наш проект для Matrix Hackathon — on-chain SocialFi jackpot на Solana.  
+Привет. Это наш проект для Matrix Hackathon — on-chain SocialFi roulette на Solana.  
 Мы строим открытую игру, в которой сочетаются fair on-chain механика, DeFi-активы, socialfi и degen UX.
 Что на экране:
 - Главная страница `Home` (`/`) с pot, wheel и deposit panel
@@ -11,7 +11,7 @@
 
 **0:15 - 0:35**  
 Пользователь может зайти в раунд не только с USDC, но и с любым поддерживаемым токеном.  
-Через Jupiter мы делаем swap в USDC и депозит в jackpot.  
+Через Jupiter мы делаем swap в USDC и депозит в pot.  
 То есть DeFi-действие становится частью игрового цикла, а не отдельной кнопкой ради демо.
 Что на экране:
 - `DepositPanel` на `Home`
@@ -82,8 +82,8 @@
 - 1:20–1:40: `WinnerModal` + degen mode + Phantom 2 signatures
 - 1:40–2:00: batch deposit UI + test/smoke/squads snippets + roadmap slide
 
-Мы делаем on-chain jackpot, который превращает DeFi в игру.  
-Пользователь приходит с любым токеном, Jupiter делает routing и swap в USDC, а дальше он участвует в общем jackpot pot.
+Мы делаем on-chain roulette, который превращает DeFi в игру.  
+Пользователь приходит с любым токеном, Jupiter делает routing и swap в USDC, а дальше он участвует в общем roulette pot.
 
 Это не просто swap UI.  
 Это SocialFi игровой loop: депозит, live pot, шансы, wheel, чат, история, VRF-розыгрыш, claim, degen post-claim.

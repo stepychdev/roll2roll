@@ -174,7 +174,7 @@ export function Home() {
                 Round #{jackpot.roundId} Live
               </div>
               <h1 className="text-xl sm:text-3xl md:text-4xl text-slate-900 dark:text-white leading-[1.1] mb-2">
-                The <span className="font-serif italic text-primary font-medium">fairest</span> social<br />jackpot on-chain.
+                The <span className="font-serif italic text-primary font-medium">fairest</span> social<br />roll on-chain.
               </h1>
               <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base max-w-md">
                 Provably fair, decentralized, and built for transparency on Solana.

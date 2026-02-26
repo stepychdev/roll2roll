@@ -54,7 +54,7 @@ interface SerializedInstruction {
 const COMPUTE_BUDGET_PROGRAM = new PublicKey(
   "ComputeBudget111111111111111111111111111111"
 );
-// Extra headroom for jackpot `deposit_any` after all Jupiter swaps.
+// Extra headroom for roulette `deposit_any` after all Jupiter swaps.
 const DEPOSIT_ANY_CU_BUFFER = 150_000;
 const MIN_CU = 400_000;
 const MAX_CU = 1_400_000; // Solana hard cap is 1.4M
@@ -182,7 +182,7 @@ export function buildMultiJupiterInstructions(
     }
   }
 
-  // Merge Jupiter CU estimates and add a single jackpot buffer.
+  // Merge Jupiter CU estimates and add a single roulette buffer.
   const fallbackEstimatePerSwap = 200_000;
   const jupiterCuEstimate = sawCuEstimate
     ? totalJupiterCuEstimate

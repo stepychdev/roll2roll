@@ -9,10 +9,10 @@ Example:
 ---
 
 ## Project Name
-**Jackpot SocialFi Roulette**
+**Roll2Roll SocialFi Roulette**
 
 Alternative (more brand-forward):
-**XYZ Jackpot: SocialFi Roulette**
+**Roll2Roll: SocialFi Roulette**
 
 ---
 
@@ -22,14 +22,14 @@ Alternative (more brand-forward):
 ---
 
 ## Project Description (Long Form)
-Jackpot SocialFi Roulette is a fair, open, on-chain SocialFi jackpot game on Solana that turns DeFi actions into a replayable game loop.
+Roll2Roll SocialFi Roulette is a fair, open, on-chain SocialFi roulette game on Solana that turns DeFi actions into a replayable game loop.
 
 Players can join a jackpot round with USDC or other supported tokens. Non-USDC assets are routed through Jupiter and converted into USDC before entering the pot. As users join, the UI updates the live pot, player distribution, and winning probabilities in real time.
 
 Winners are selected using verifiable randomness (VRF), making outcomes transparent and auditable on-chain. Winners can claim in classic USDC mode or use our degen claim mode, which uses a Jupiter-powered post-claim swap for a more gamified payout experience. Our current lite degen mode is VRF-seeded (deterministic token selection from round randomness), no-reroll, and designed to preserve fairness and openness in the UX.
 
 What makes the project unique:
-- provably fair on-chain jackpot mechanics
+- provably fair on-chain roulette mechanics
 - Jupiter-powered token entry and degen claim flows
 - SocialFi gameplay loops (live feed, wheel, chat, history)
 - mobile-friendly UX and batch deposit flows
@@ -40,7 +40,7 @@ This is built as a real product foundation with a clear roadmap toward stricter 
 ---
 
 ## Project Description (Shorter Version, if field is limited)
-A fair, open, on-chain SocialFi jackpot on Solana where users join with USDC or other tokens via Jupiter swaps, compete in a shared pot, and winners are selected by VRF. Includes degen claim UX, batch deposits, and a mobile-first game loop with real on-chain state and strong ops/testing foundations.
+A fair, open, on-chain SocialFi roulette on Solana where users join with USDC or other tokens via Jupiter swaps, compete in a shared pot, and winners are selected by VRF. Includes degen claim UX, batch deposits, and a mobile-first game loop with real on-chain state and strong ops/testing foundations.
 
 ---
 

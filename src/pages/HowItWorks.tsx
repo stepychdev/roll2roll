@@ -244,7 +244,7 @@ export function HowItWorks() {
               How It Works
             </h2>
             <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Deposit any Solana token, auto-swap via <a href="https://jup.ag/" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">Jupiter</a>, and compete for the jackpot. Claim in USDC or go full degen.
+              Deposit any Solana token, auto-swap via <a href="https://jup.ag/" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">Jupiter</a>, and compete for the pot. Claim in USDC or go full degen.
             </p>
           </div>
         </section>
@@ -271,7 +271,7 @@ export function HowItWorks() {
                 onClick={() => navigate('game')}
                 className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-bold text-lg shadow-lg shadow-primary/30 hover:bg-primary/90 hover:shadow-xl transition-all hover:-translate-y-0.5"
               >
-                Enter the Jackpot
+                Enter Roll2Roll
               </button>
               <button
                 onClick={() => navigate('fairness')}

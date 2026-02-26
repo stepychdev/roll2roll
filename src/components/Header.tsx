@@ -63,9 +63,9 @@ export function Header() {
           onClick={() => navigate('game')}
         >
           <div className="flex items-center justify-center size-10 rounded-full bg-primary/10 text-primary">
-            <span className="text-xl font-black">JP</span>
+            <span className="text-xl font-black">R2R</span>
           </div>
-          <h2 className="text-slate-900 dark:text-white text-xl font-bold tracking-tight">Jackpot</h2>
+          <h2 className="text-slate-900 dark:text-white text-xl font-bold tracking-tight">Roll2Roll</h2>
         </div>
 
         {/* Desktop Nav — pill tabs */}

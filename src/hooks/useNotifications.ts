@@ -11,7 +11,7 @@ export interface AppNotification {
   unread: boolean;
 }
 
-const STORAGE_KEY = 'jackpot_notifications';
+const STORAGE_KEY = 'roll2roll_notifications';
 const MAX_NOTIFICATIONS = 30;
 
 function load(): AppNotification[] {

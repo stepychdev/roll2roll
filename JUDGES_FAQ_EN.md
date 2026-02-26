@@ -110,7 +110,7 @@ Because the product naturally fits mobile behavior:
 We are designing distribution and gameplay together, not separately.
 
 ## 12) What is your long-term monetization thesis?
-The fair/on-chain jackpot core is reusable across many formats:
+The fair/on-chain roulette core is reusable across many formats:
 - public rounds
 - sponsored rooms
 - custom user-configured rooms

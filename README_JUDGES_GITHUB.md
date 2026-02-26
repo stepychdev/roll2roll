@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">Jackpot</h1>
+  <h1 align="center">Roll2Roll</h1>
   <p align="center">
     <strong>Throw in your tokens. One wallet walks away with everything.</strong>
   </p>
@@ -30,13 +30,13 @@
 
 This is not a USDC roulette. This is not a slot machine with a blockchain label on it.
 
-**Jackpot is a native-token social arena.**
+**Roll2Roll is a native-token social arena.**
 
 Players throw in SOL, BONK, WIF, JTO, POPCAT — whatever they're holding — into a shared pot. The protocol normalizes everything to fair ticket values via Jupiter. One random winner takes it all. Every step is on-chain, every outcome is verifiable, every round is public.
 
 The twist: **the winner doesn't just get boring stablecoins back.** In Degen Claim Mode, the payout is routed into a random token — turning every round into a "what did I just win?" moment that's built for clips, streams, and Twitter posts.
 
-> Think CS:GO jackpot meets Solana-native token culture.
+> Think CS:GO roulette meets Solana-native token culture.
 
 <br />
 
@@ -62,7 +62,7 @@ The twist: **the winner doesn't just get boring stablecoins back.** In Degen Cla
 
 ## Native Tokens, Not Stablecoins
 
-Most on-chain jackpots force you to convert your tokens to USDC first, play a sterile number game, and withdraw USDC. That's boring. It ignores what makes crypto culture interesting — **the tokens themselves.**
+Most on-chain roulettes force you to convert your tokens to USDC first, play a sterile number game, and withdraw USDC. That's boring. It ignores what makes crypto culture interesting — **the tokens themselves.**
 
 We flip this:
 

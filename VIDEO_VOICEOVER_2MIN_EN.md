@@ -3,7 +3,7 @@
 ## Version 1 — Product demo pitch (~2:00)
 
 **0:00 - 0:15**  
-Hi, this is our Matrix Hackathon project: a fair, open, on-chain SocialFi jackpot on Solana.  
+Hi, this is our Matrix Hackathon project: a fair, open, on-chain SocialFi roulette on Solana.  
 We combine provably fair game mechanics, real DeFi assets, and degen-first UX.
 On screen:
 - `Home` page (`/`) overview: pot, wheel, deposit panel
@@ -11,7 +11,7 @@ On screen:
 
 **0:15 - 0:35**  
 Players can join a round not only with USDC, but with other supported tokens as well.  
-We use Jupiter to route and swap those assets into USDC before entering the jackpot.  
+We use Jupiter to route and swap those assets into USDC before entering the pot.  
 So DeFi actions are part of the game loop itself, not just a side integration.
 On screen:
 - `DepositPanel` on `Home`
@@ -80,7 +80,7 @@ Suggested edit timeline for Version 2:
 - 1:20–1:40 WinnerModal + degen mode + two-signature flow
 - 1:40–2:00 batch deposit + tests/smoke/multisig snippets + roadmap slide
 
-We built a fair, open, on-chain SocialFi jackpot on Solana.  
+We built a fair, open, on-chain SocialFi roulette on Solana.  
 Users can enter with USDC or other tokens through Jupiter routing, compete in a shared pot, and win through VRF-based settlement.
 
 The key idea is turning DeFi into a game loop:
