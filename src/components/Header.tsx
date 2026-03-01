@@ -56,6 +56,31 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-transparent">
+      <div className="bg-indigo-600 text-white border-b border-indigo-500/70">
+        <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-2 text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+          <span className="font-medium">
+              We have moved to the new version of Winny.
+          </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="https://winny-woad.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 font-semibold hover:text-indigo-100"
+            >
+              Vercel
+            </a>
+            <a
+              href="https://github.com/stepychdev/winny"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 font-semibold hover:text-indigo-100"
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
       <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-3 sm:py-5 flex items-center justify-between">
         {/* Logo */}
         <div
@@ -127,7 +152,7 @@ export function Header() {
                 notifications={notifications}
                 onClose={() => setNotifOpen(false)}
                 onClearAll={() => { clearAll(); setNotifOpen(false); }}
-                onClickNotification={(_id) => {
+                onClickNotification={() => {
                   setNotifOpen(false);
                   navigate('game');
                 }}
