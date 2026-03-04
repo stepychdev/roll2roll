@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Wallet, Menu, X, Sun, Moon, Bell, User } from 'lucide-react';
+import { Wallet, Menu, X, Sun, Moon, Bell, User, ExternalLink, Play } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useNavigation, type Page } from '../contexts/NavigationContext';
@@ -56,31 +56,52 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-transparent">
-      <div className="bg-indigo-600 text-white border-b border-indigo-500/70">
-        <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-2 text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-          <span className="font-medium">
-              We have moved to the new version of Winny.
-          </span>
-          <div className="flex flex-wrap items-center gap-3">
+      {/* ── New Version Announcement Banner ── */}
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white border-b border-indigo-500/50 shadow-lg shadow-indigo-500/20">
+        <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <span className="text-xl sm:text-2xl">🚀</span>
+            <div>
+              <p className="text-sm sm:text-base font-bold leading-tight">
+                We have moved to the new version of Winny!
+              </p>
+              <p className="text-[11px] sm:text-xs text-indigo-200 mt-0.5">
+                Upgraded smart contracts, improved UX & new features
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <a
               href="https://winny-woad.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-2 font-semibold hover:text-indigo-100"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/15 hover:bg-white/25 text-xs sm:text-sm font-semibold transition-colors backdrop-blur-sm"
             >
+              <ExternalLink className="w-3.5 h-3.5" />
               Vercel
             </a>
             <a
               href="https://github.com/stepychdev/winny"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-2 font-semibold hover:text-indigo-100"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/15 hover:bg-white/25 text-xs sm:text-sm font-semibold transition-colors backdrop-blur-sm"
             >
+              <ExternalLink className="w-3.5 h-3.5" />
               GitHub
+            </a>
+            <a
+              href="https://drive.google.com/drive/folders/1dw0jM6orC_CxFXa58fBg7UXtKLLCquSO"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-400/90 hover:bg-amber-400 text-indigo-900 text-xs sm:text-sm font-bold transition-colors shadow-sm"
+            >
+              <Play className="w-3.5 h-3.5" />
+              Demo Video
             </a>
           </div>
         </div>
       </div>
+
       <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-3 sm:py-5 flex items-center justify-between">
         {/* Logo */}
         <div
@@ -152,7 +173,7 @@ export function Header() {
                 notifications={notifications}
                 onClose={() => setNotifOpen(false)}
                 onClearAll={() => { clearAll(); setNotifOpen(false); }}
-                onClickNotification={() => {
+                onClickNotification={(_id) => {
                   setNotifOpen(false);
                   navigate('game');
                 }}
