@@ -60,7 +60,6 @@ export function Header() {
       <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white border-b border-indigo-500/50 shadow-lg shadow-indigo-500/20">
         <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <div className="flex items-center gap-2.5 flex-1 min-w-0">
-            <span className="text-xl sm:text-2xl">🚀</span>
             <div>
               <p className="text-sm sm:text-base font-bold leading-tight">
                 We have moved to the new version of Winny!
